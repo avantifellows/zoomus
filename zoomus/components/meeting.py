@@ -73,26 +73,32 @@ class MeetingComponentV2(base.BaseComponent):
         )
 
     def register(self, **kwargs):
-        util.require_keys(kwargs, ["id", "email", "first_name", "last_name", "phone"])
+        util.require_keys(kwargs, ["id", "email", "first_name", "req_questions"])
         
+        oqs = kwargs["req_questions"]
         params={
             "email": kwargs["email"],
             "first_name": kwargs["first_name"],
-            "last_name": kwargs["last_name"],
-            "custom_questions": [
-                {
-                    "title": "Phone Number",
-                    "value": kwargs["phone"]
-                }
-            ]
+            "custom_questions": []
         }
 
+        for qa in oqs:
+            q = qa["question"]
+            a = qa["value"]
+            if q == "last_name" or q == "city":
+                params[q] = a
+            else:
+                cq = {"title": q, "value": a}
+                params["custom_questions"].append(cq)
+        
         if "city" in kwargs:
             params["city"] = kwargs["city"]
-
-        return self.post_request(
-            "/meetings/{}/registrants".format(kwargs.get("id")), data=params
+        
+        resp = self.post_request(
+            "/meetings/{}/registrants".format(kwargs.get("id")), data=json.dumps(params)
         )
+
+        return resp
     
     def approve(self, **kwargs):
         util.require_keys(kwargs, ["id", "email", "userid"])
