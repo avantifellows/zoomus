@@ -44,7 +44,7 @@ class UserComponentV2(base.BaseComponent):
         return self.get_request("/users", params=kwargs)
 
     def create(self, **kwargs):
-        return self.post_request("/users", data=kwargs)
+        return self.post_request("/users", data=kwargs["data"])
 
     def update(self, **kwargs):
         util.require_keys(kwargs, "id")
