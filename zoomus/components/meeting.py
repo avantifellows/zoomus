@@ -120,3 +120,26 @@ class MeetingComponentV2(base.BaseComponent):
         return self.get_request(
             "/meetings/{}/registrants/questions".format(kwargs.get("id"))
         )
+
+    def registrants(self, **kwargs):
+        util.require_keys(kwargs, "id")
+        params = {"status": "approved", "page_size": 300}
+        resp = self.get_request(
+            "/meetings/{}/registrants".format(kwargs.get("id")), params=params
+        )
+        data = resp.json()
+        if 'registrants' not in data:
+            return None
+        registrants = data['registrants']
+        
+        while ('next_page_token' in data and data['next_page_token'] is not "" ):
+            params['next_page_token'] = data['next_page_token']
+            resp = self.get_request(
+                "/meetings/{}/registrants".format(kwargs.get("id")), params=params
+            )
+            data = resp.json()
+            
+            registrants = registrants + data["registrants"]
+            
+        
+        return registrants
