@@ -143,3 +143,18 @@ class MeetingComponentV2(base.BaseComponent):
             
         
         return registrants
+
+    def deny(self, **kwargs):
+        util.require_keys(kwargs, ["id", "email", "userid"])
+        params = {
+            "action": "deny",
+            "registrants": [
+                {
+                    "id": kwargs["userid"],
+                    "email": kwargs["email"]
+                }
+            ]
+        }
+        return self.put_request(
+            "/meetings/{}/registrants/status".format(kwargs.get("id")), data=params
+        )
