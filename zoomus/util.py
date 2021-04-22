@@ -260,7 +260,9 @@ def generate_jwt(key, secret):
     payload = {"iss": key, "exp": int(time.time() + 360000)}
 
     token = jwt.encode(payload, secret, algorithm="HS256", headers=header)
-    return token.decode("utf-8")
+    # Commented due to this error: AttributeError: 'str' object has no attribute 'decode' 
+    # Since its str, it's already decoded
+    return token
 
 
 def encode_uuid(val):

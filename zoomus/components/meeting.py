@@ -132,7 +132,7 @@ class MeetingComponentV2(base.BaseComponent):
             return None
         registrants = data['registrants']
         
-        while ('next_page_token' in data and data['next_page_token'] is not "" ):
+        while ('next_page_token' in data and data['next_page_token'] != "" ):
             params['next_page_token'] = data['next_page_token']
             resp = self.get_request(
                 "/meetings/{}/registrants".format(kwargs.get("id")), params=params
