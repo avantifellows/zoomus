@@ -134,6 +134,11 @@ class ZoomClient(util.ApiClient):
         return self.components.get("recording")
 
     @property
+    def past_meeting(self):
+        """Get the recording component"""
+        return self.components.get("past_meeting")
+
+    @property
     def phone(self):
         """Get the phone component"""
         return self.components.get("phone")
